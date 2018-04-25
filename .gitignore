@@ -103,3 +103,8 @@ ENV/
 # csv files
 .csv
 dataset/
+
+# gedit temp file
+*~
+
+checkpoints/

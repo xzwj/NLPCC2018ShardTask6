@@ -86,7 +86,19 @@ class ZhihuData(data.Dataset):
         self.index2qid = question_d['index2qid'].item()
         self.l_end=0
         self.labels = labels_['d']
+        #print self.labels
+        #for i in self.labels:
+            #for j in range(len(self.labels[i])):
+                #if self.labels[i][j] > 1981: # 训练数据中单个问题最多被打了18个标签
+                    #self.labels[i][j] = 1982+j
+        for i in self.labels:
+            for j in range(len(self.labels[i])):
+                if self.labels[i][j] > 1999: # 训练数据中单个问题最多被打了18个标签
+                    self.labels[i][j] = 2000
+            self.labels[i] = list(set(self.labels[i]))
+                    
         
+        #print self.labels
         self.training=True
 
    
@@ -127,7 +139,9 @@ class ZhihuData(data.Dataset):
         qid = self.index2qid[index+self.l_end]
         labels = self.labels[qid]
         data = (t.from_numpy(title).long(),t.from_numpy(content).long())
-        label_tensor = t.zeros(25551).scatter_(0,t.LongTensor(labels),1).long()
+        #label_tensor = t.zeros(25551).scatter_(0,t.LongTensor(labels),1).long()
+        # print labels
+        label_tensor = t.zeros(2000).scatter_(0,t.LongTensor(labels),1).long()
         return data,label_tensor
 
     def __len__(self):
@@ -141,6 +155,7 @@ class ZhihuALLData(data.Dataset):
         self.augument=augument
         import json
         with open(labels_file) as f:
+            
             labels_ = json.load(f)
 
         # embedding_d = np.load(embedding_root)['vector']
@@ -282,14 +297,20 @@ class ALLFoldData(data.Dataset):
         return self.len_
 
 if __name__=="__main__":
-    data_root="/data/text/zhihu/result/"
-    labels_file="/home/a/code/pytorch/zhihu/ddd/labels.json"
-    val_label="/home/a/code/pytorch/zhihu/ddd/val.npz"
-    sb=StackData(data_root,labels_file,val_label)
+    #data_root="~/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/result/"
+    train_data_path = '../dataset/train_0421.npz' # train
+    labels_path = '/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/lables_0422.json'
+    type_='word'
+    augument= False
+    
+    #labels_file="/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/lables_0422.json"
+    #val_label="../dataset/val_0422.npz"
+    dataset = ZhihuData(train_data_path,labels_path,type_=type_,augument=augument)
+    '''
     for i in range(10):
         print sb[i][0].size()
         print sb[i][1]
-
+    '''
 
 
 

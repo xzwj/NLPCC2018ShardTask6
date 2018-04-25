@@ -4,7 +4,6 @@
 生成每个qid对应的label,保存成json
 '''
 def main(file,outfile):
-
     with open(file) as f:
         lines = f.readlines()
 
@@ -15,6 +14,7 @@ def main(file,outfile):
         labels = labels.split('|')
         return qid,labels
     results = list( map(process, lines))
+
     # print results[0]
     # print len(results[0][0])
     # import ipdb;ipdb.set_trace()

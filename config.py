@@ -12,10 +12,10 @@ class Config(object):
     model='CNNText' 
     title_dim = 100 # 标题的卷积核数
     content_dim = 200 #描述的卷积核数
-    num_classes = 25551 # 类别
+    num_classes = 2000 #25551 # 类别
     embedding_dim = 100 # embedding大小
     linear_hidden_size = 2000 # 全连接层隐藏元数目
-    kmax_pooling = 2# k
+    kmax_pooling = 2#2# k
     hidden_size = 256 #LSTM hidden size
     num_layers=2 #LSTM layers
     inception_dim = 512 #inception的卷积核数
@@ -36,7 +36,7 @@ class Config(object):
     test_data_path='/mnt/7/zhihu/ieee_zhihu_cup/data/test.npz' # test
     result_path='csv/'+time.strftime(tfmt)+'.csv'
     shuffle = True # 是否需要打乱数据
-    num_workers = 4 # 多线程加载所需要的线程数目
+    num_workers = 1 # 多线程加载所需要的线程数目
     pin_memory =  True # 数据从CPU->pin_memory—>GPU加速
     batch_size = 32 # 128
 

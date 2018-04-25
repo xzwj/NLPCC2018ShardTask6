@@ -71,12 +71,12 @@ def main(**kwargs):
     opt.parse(kwargs,print_=False)
     if opt.debug:import ipdb;ipdb.set_trace()
 
-    model = getattr(models,opt.model)(opt).cuda()
+    model = getattr(models,opt.model)(opt).cuda() # 360M -> 916M
     if opt.model_path:
         model.load(opt.model_path)
     print(model)
 
-    opt.parse(kwargs,print_=True)
+    opt.parse(kwargs,print_=True) # 打印配置信息
 
     vis.reinit(opt.env)
     pre_loss=1.0
@@ -92,7 +92,7 @@ def main(**kwargs):
                     )
 
     optimizer = model.get_optimizer(lr,opt.lr2,opt.weight_decay)
-    loss_meter = tnt.meter.AverageValueMeter()
+    loss_meter = tnt.meter.AverageValueMeter() # 平均损失
     score_meter=tnt.meter.AverageValueMeter()
     best_score = 0
 
@@ -103,11 +103,15 @@ def main(**kwargs):
             # 训练 更新参数
             title,content,label = Variable(title.cuda()),Variable(content.cuda()),Variable(label.cuda())
             optimizer.zero_grad()
-            score = model(title,content)
-            loss = loss_function(score,opt.weight*label.float())
+            score = model(title,content) # 916M -> 969M
+            loss = loss_function(score,opt.weight*label.float()) # 计算损失
             loss_meter.add(loss.data[0])
-            loss.backward()
-            optimizer.step()
+            #print '########################  1  ####################'
+            #print os.popen('nvidia-smi').read()
+            loss.backward() # 969M -> 1528M
+            #print '########################  2  ####################'
+            #print os.popen('nvidia-smi').read()
+            optimizer.step() # 更新模型参数
 
             if ii%opt.plot_every ==opt.plot_every-1:
                 ### 可视化

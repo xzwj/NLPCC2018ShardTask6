@@ -2,6 +2,7 @@ from .BasicModule import BasicModule
 import torch as t
 import numpy as np
 from torch import nn
+import os
 
 
 def kmax_pooling(x, dim, k):
@@ -43,7 +44,6 @@ class LSTMText(BasicModule):
         )
         # self.fc = nn.Linear(3 * (opt.title_dim+opt.content_dim), opt.num_classes)
         if opt.embedding_path:
-            print t.from_numpy(np.load(opt.embedding_path)['vector'])
             self.encoder.weight.data.copy_(t.from_numpy(np.load(opt.embedding_path)['vector']))
  
     def forward(self, title, content):
@@ -53,13 +53,17 @@ class LSTMText(BasicModule):
             title=title.detach()
             content=content.detach()
         
+        #print '########################  3  ####################'
+        #print os.popen('nvidia-smi').read()
         title_out = self.title_lstm(title.permute(1,0,2))[0].permute(1,2,0) 
-
         content_out = self.content_lstm(content.permute(1,0,2))[0].permute(1,2,0)
-
+        #print '########################  4  ####################'
+        #print os.popen('nvidia-smi').read()
 
         title_conv_out = kmax_pooling((title_out),2,self.opt.kmax_pooling)
         content_conv_out = kmax_pooling((content_out),2,self.opt.kmax_pooling)
+        #print '########################  5  ####################'
+        #print os.popen('nvidia-smi').read()
 
         conv_out = t.cat((title_conv_out,content_conv_out),dim=1)
         reshaped = conv_out.view(conv_out.size(0), -1)

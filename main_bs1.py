@@ -71,10 +71,10 @@ def main(**kwargs):
     opt.parse(kwargs,print_=False)
     if opt.debug:import ipdb;ipdb.set_trace()
 
-    model = getattr(models,opt.model)(opt).cuda() # 360M -> 916M
+    model = getattr(models,opt.model)(opt).cuda()
     if opt.model_path:
         model.load(opt.model_path)
-    # print(model)
+    print(model)
 
     opt.parse(kwargs,print_=True) # 打印配置信息
 
@@ -103,15 +103,11 @@ def main(**kwargs):
             # 训练 更新参数
             title,content,label = Variable(title.cuda()),Variable(content.cuda()),Variable(label.cuda())
             optimizer.zero_grad()
-            score = model(title,content) # 916M -> 969M
-            loss = loss_function(score,opt.weight*label.float()) # 计算损失
+            score = model(title,content)
+            loss = loss_function(score,opt.weight*label.float())
             loss_meter.add(loss.data[0])
-            #print '########################  1  ####################'
-            #print os.popen('nvidia-smi').read()
-            loss.backward() # 969M -> 1528M
-            #print '########################  2  ####################'
-            #print os.popen('nvidia-smi').read()
-            optimizer.step() # 更新模型参数
+            loss.backward()
+            optimizer.step()
 
             if ii%opt.plot_every ==opt.plot_every-1:
                 ### 可视化

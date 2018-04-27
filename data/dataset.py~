@@ -93,8 +93,9 @@ class ZhihuData(data.Dataset):
                     #self.labels[i][j] = 1982+j
         for i in self.labels:
             for j in range(len(self.labels[i])):
-                if self.labels[i][j] > 1999: # 训练数据中单个问题最多被打了18个标签
-                    self.labels[i][j] = 2000
+                if self.labels[i][j] > 1998: # 将标签数减小为num_classes个
+                    self.labels[i][j] = 1999
+            self.labels[i] = list(set(self.labels[i]))
                     
         
         #print self.labels

@@ -33,7 +33,7 @@ class Config(object):
     embedding_path = './dataset/word_embedding_0421.npz' # Embedding
     train_data_path = './dataset/train_0421.npz' # train
     labels_path = '/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/lables_0422.json' # labels    
-    test_data_path='/mnt/7/zhihu/ieee_zhihu_cup/data/test.npz' # test
+    test_data_path='/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/tasktestdata06/dev_data.npz' # test
     result_path='csv/'+time.strftime(tfmt)+'.csv'
     shuffle = True # 是否需要打乱数据
     num_workers = 1 # 多线程加载所需要的线程数目
@@ -110,7 +110,7 @@ def parse(self,kwargs,print_=True):
         self.embedding_path = './dataset/word_embedding_0421.npz' # Embedding
         self.train_data_path = './dataset/train_0421.npz' # train
         self.labels_path = '/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/lables_0422.json' # labels    
-        self.test_data_path='./dataset/%s.npz' %('val_0422' if self.val else 'test')
+        self.test_data_path='./dataset/%s.npz' %('val_0422' if self.val else 'tasktestdata06/dev_data')
 
         ### word和char的长度不一样 ##
         if self.type_=='word':

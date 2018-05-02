@@ -131,7 +131,8 @@ def main(**kwargs):
                     predict_label_and_marked_label_list.append((predict[jj],true.tolist()))
                 score_,prec_,recall_,_ss=get_score(predict_label_and_marked_label_list)
                 score_meter.add(score_)
-                vis.vis.text('prec:%s,recall:%s,score:%s,a:%s' %(prec_,recall_,score_,_ss),win='tmp')
+                # vis.vis.text('predict_label_and_marked_label_list: %s' %(predict_label_and_marked_label_list),win='tmp')
+                vis.vis.text('prec:%s,recall:%s,score:%s,a:%s,predict_label_and_marked_label_list:%s' %(prec_,recall_,score_,_ss,predict_label_and_marked_label_list),win='tmp')
                 vis.plot('scores', score_meter.value()[0])
                 
                 #eval()

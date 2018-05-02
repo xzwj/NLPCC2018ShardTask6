@@ -5,6 +5,8 @@ import numpy as np
 import random
 from glob import glob
 import json
+
+
 class StackData(data.Dataset):
     def __init__(self,data_root,labels_file,val):
         '''
@@ -82,23 +84,46 @@ class ZhihuData(data.Dataset):
         
         self.data_title,self.data_content = self.train_data
         self.len_ = len(self.data_title)
-
+        #print 'question_d[\'index2qid\'].item()',question_d['index2qid'].item()
         self.index2qid = question_d['index2qid'].item()
         self.l_end=0
         self.labels = labels_['d']
-        #print self.labels
-        #for i in self.labels:
-            #for j in range(len(self.labels[i])):
-                #if self.labels[i][j] > 1981: # 训练数据中单个问题最多被打了18个标签
-                    #self.labels[i][j] = 1982+j
+        
         for i in self.labels:
+            #for j in range(len(self.labels[i])):
+                #if self.labels[i][j] > 1998: # 将标签数减小为num_classes个
+                    #self.labels[i][j] = 1999
+            
+            self.labels[i] = list(set(self.labels[i])) # 单个问题标签去重
+            #self.labels[i] = [_ if _ == 0 else '-1' for _ in self.labels[i]]
+            #if 0 in self.labels[i]:
+                #self.labels[i].remove(0)
+        
+        '''
+        for i in self.labels:
+            remove_j = []
+            #print 'i',i
+            #print 'self.labels[i]',self.labels[i]
+            for j in range(len(self.labels[i])): # change lables type str->int
+                self.labels[i][j] = int(self.labels[i][j])
+            
             for j in range(len(self.labels[i])):
                 if self.labels[i][j] > 1998: # 将标签数减小为num_classes个
-                    self.labels[i][j] = 1999
-            self.labels[i] = list(set(self.labels[i])) # 单个问题标签去重
+                    remove_j.append(self.labels[i][j])
+            #print 'remove_j',remove_j
+            for _ in remove_j:
+                self.labels[i].remove(_)
+            #print 'self.labels[i]',self.labels[i]
+            #print '----------------------'
+            del remove_j
                     
+        for i in self.labels.keys():
+            if self.labels[i] == []:
+                self.labels.pop(i)
+        #print self.labels.get('u\'4140663049\'')
         
         #print self.labels
+        '''
         self.training=True
 
    
@@ -137,10 +162,18 @@ class ZhihuData(data.Dataset):
                 content = self.shuffle(content)
 
         qid = self.index2qid[index+self.l_end]
+        #print 'self.l_end',self.l_end
+        #print 'index',index
+        #print 'qid',qid
+        
+        #for _ in self.labels[qid]:
+            #if isinstance(_,str):
+                #print _
         labels = self.labels[qid]
+        #labels = map(str2long, self.labels[qid])
         data = (t.from_numpy(title).long(),t.from_numpy(content).long())
         #label_tensor = t.zeros(25551).scatter_(0,t.LongTensor(labels),1).long()
-        # print labels
+        #print 'labels',labels
         label_tensor = t.zeros(2000).scatter_(0,t.LongTensor(labels),1).long()
         return data,label_tensor
 
@@ -298,8 +331,8 @@ class ALLFoldData(data.Dataset):
 
 if __name__=="__main__":
     #data_root="~/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/result/"
-    train_data_path = '../dataset/train_0421.npz' # train
-    labels_path = '/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/lables_0422.json'
+    train_data_path = './dataset/train_with_300w.npz' # train
+    labels_path = './dataset/lables_0429.json'
     type_='word'
     augument= False
     

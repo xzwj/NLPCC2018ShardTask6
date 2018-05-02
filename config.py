@@ -13,7 +13,7 @@ class Config(object):
     title_dim = 100 # 标题的卷积核数
     content_dim = 200 #描述的卷积核数
     num_classes = 2000 #25551 # 类别
-    embedding_dim = 100 # embedding大小
+    embedding_dim = 300 # embedding大小
     linear_hidden_size = 2000 # 全连接层隐藏元数目
     kmax_pooling = 2#2# k
     hidden_size = 256 #LSTM hidden size
@@ -21,7 +21,7 @@ class Config(object):
     inception_dim = 512 #inception的卷积核数
     
     # vocab_size = 11973 # num of chars
-    vocab_size = 216583 # num of words 
+    vocab_size = 123929 # 216583 # num of words 
     kernel_size = 3 #单尺度卷积核
     kernel_sizes = [2,3,4] #多尺度卷积核
     title_seq_len = 40 # 标题长度,word为30 char为50
@@ -30,9 +30,9 @@ class Config(object):
     all=False # 模型同时训练char和word
 
     # embedding_path = '/mnt/7/zhihu/ieee_zhihu_cup/data/char_embedding.npz' # Embedding
-    embedding_path = './dataset/word_embedding_0421.npz' # Embedding
-    train_data_path = './dataset/train_0421.npz' # train
-    labels_path = '/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/lables_0422.json' # labels    
+    embedding_path = './dataset/word2vec_THUCTC_300w/embedding2matrix_after_filter.npz' # Embedding
+    train_data_path = './dataset/train_del_labels.npz' # train
+    labels_path = '/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/labels_2000.json' # labels    
     test_data_path='/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/tasktestdata06/dev_data.npz' # test
     result_path='csv/'+time.strftime(tfmt)+'.csv'
     shuffle = True # 是否需要打乱数据
@@ -74,9 +74,8 @@ class Config(object):
     ###stack
     model_num=7
     data_root="/data/text/zhihu/result/"
-    labels_file="/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/lables_0422.json"
-    labels_file="/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/lables_0422.json"
-    val="./dataset/val.npz"
+    labels_file="/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/labels_2000.json"
+    val="./dataset/val_with_300w.npz"
 
 def parse(self,kwargs,print_=True):
         '''
@@ -107,14 +106,14 @@ def parse(self,kwargs,print_=True):
             self.embedding_path='./ddd/char_embedding.npz'
         '''
             
-        self.embedding_path = './dataset/word_embedding_0421.npz' # Embedding
-        self.train_data_path = './dataset/train_0421.npz' # train
-        self.labels_path = '/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/lables_0422.json' # labels    
-        self.test_data_path='./dataset/%s.npz' %('val_0422' if self.val else 'tasktestdata06/dev_data')
+        self.embedding_path = './dataset/word2vec_THUCTC_300w/embedding2matrix_after_filter.npz' # Embedding
+        self.train_data_path = './dataset/train_del_labels.npz' # train
+        self.labels_path = '/home/tianyuan/E/NLPCC2018ShardTask6/NLPCC2018ShardTask6/dataset/labels_2000.json' # labels    
+        self.test_data_path='./dataset/%s.npz' %('val_with_300w' if self.val else 'tasktestdata06/dev_data')
 
         ### word和char的长度不一样 ##
         if self.type_=='word':
-            self.vocab_size = 216583 # num of words 
+            self.vocab_size = 123929 #216583 # num of words 
             self.title_seq_len = 40
             self.content_seq_len = 180 
             self.embedding_path=self.embedding_path.replace('char','word') if self.embedding_path is not None else None

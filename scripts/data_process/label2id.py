@@ -12,6 +12,9 @@ def main(file,outfile):
         # labels = line.replace('\n','').replace('\r','').split(',')[-1]
         labels = line.replace('\r\n','').split(',')[-1]
         labels = labels.split('|')
+        print 'qid',qid
+        print 'labels',labels
+        print '-----------------'
         return qid,labels
     results = list( map(process, lines))
 

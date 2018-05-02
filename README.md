@@ -17,8 +17,7 @@ $ kill -9 PID // 杀死进程
 
 ```  
 解释（https://webcache.googleusercontent.com/search?q=cache:u9tKrJzaMZkJ:https://discuss.pytorch.org/t/gpu-memory-not-returned/1311+&cd=1&hl=zh-CN&ct=clnk）：  
->   
-`ps x |grep python|awk '{print $1}'|xargs kill`  
+> `ps x |grep python|awk '{print $1}'|xargs kill`  
 `ps x`: show all process of current user  
 `grep python`: to get process that has python in command line  
 `awk '{print $1}`': to get the related process pid  
